@@ -1,0 +1,166 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "name": "lib/match.mjs",
+    "content": "import PathRegExp from 'path-to-regexp';\r\n// const ROUTE_MAP = new Map();\r\nexport const ROUTE_MAP = new Map();\r\n\r\n/**\r\n * Generates a express style regexp for a given route and stores in a Map\r\n * @param  {string} route The route that should be converted into a regexp\r\n * @return {Object}       Returns an object with param keys and a path regexp\r\n */\r\nexport function getParameterizedPath(route, options = { useMap: true, }) {\r\n  if (ROUTE_MAP.has(route) && options.useMap) {\r\n    return ROUTE_MAP.get(route);\r\n  } else {\r\n    var keys = [];\r\n    var result = new PathRegExp(route, keys);\r\n    // console.log({ route, }, {\r\n    //   re: result,\r\n    //   keys,\r\n    // });\r\n    ROUTE_MAP.set(route, {\r\n      re: result,\r\n      keys: keys,\r\n    });\r\n    return { keys:keys, re: result, };\r\n  }\r\n}\r\n\r\n\r\n/**\r\n * Finds a matching dynamic route from manifest\r\n * @param  {Object|Array} routes   The manifest configuration object\r\n * @param  {string} location The window location that should be resolved\r\n * @return {string}          A matching dynamic route\r\n */\r\nexport function findMatchingRoutePath(routes, location, options = {}) {\r\n  var matching;\r\n  location = (/\\?[^\\s]+$/.test(location)) ? location.replace(/^([^\\s\\?]+)\\?[^\\s]+$/, '$1') : location;\r\n  const routeArray = Array.isArray(routes) ? routes : Object.keys(routes);\r\n  routeArray.forEach(function(key){\r\n    var result = getParameterizedPath(key, options);\r\n    if (result.re.test(location) && !matching) matching = key;\r\n  });\r\n  // console.log({ routes, location, matching, });\r\n  return matching;\r\n}\r\n",
+    "static": true,
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/lib/match.mjs",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "variable",
+    "name": "ROUTE_MAP",
+    "memberof": "lib/match.mjs",
+    "static": true,
+    "longname": "lib/match.mjs~ROUTE_MAP",
+    "access": "public",
+    "export": true,
+    "importPath": "test-matching-route/lib/match.mjs",
+    "importStyle": "{ROUTE_MAP}",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "function",
+    "name": "getParameterizedPath",
+    "memberof": "lib/match.mjs",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "lib/match.mjs~getParameterizedPath",
+    "access": "public",
+    "export": true,
+    "importPath": "test-matching-route/lib/match.mjs",
+    "importStyle": "{getParameterizedPath}",
+    "description": "Generates a express style regexp for a given route and stores in a Map",
+    "lineNumber": 10,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "route",
+        "description": "The route that should be converted into a regexp"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "Returns an object with param keys and a path regexp"
+    }
+  },
+  {
+    "__docId__": 3,
+    "kind": "function",
+    "name": "findMatchingRoutePath",
+    "memberof": "lib/match.mjs",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "lib/match.mjs~findMatchingRoutePath",
+    "access": "public",
+    "export": true,
+    "importPath": "test-matching-route/lib/match.mjs",
+    "importStyle": "{findMatchingRoutePath}",
+    "description": "Finds a matching dynamic route from manifest",
+    "lineNumber": 35,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object",
+          "Array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "routes",
+        "description": "The manifest configuration object"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "location",
+        "description": "The window location that should be resolved"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "A matching dynamic route"
+    }
+  },
+  {
+    "kind": "index",
+    "content": "# test-matching-route\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manualIndex",
+    "content": "# test-matching-route\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manualAsset",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/manual/asset",
+    "name": "./manual/asset",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manual",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/manual/overview.md",
+    "name": "./manual/overview.md",
+    "content": "# Overview\r\n\r\nAll of the model building classes are structured similarly to ml.js models. Each model has three shared components regardless if it's a regression, classification or time series model.\r\n\r\nThis library was built to quickly implement [Tensorflow](https://js.tensorflow.org) and [Keras](https://js.tensorflow.org/tutorials/import-keras.html) models in JavaScript.\r\n\r\n## Configuration\r\n\r\nAll of the model configuration is managed during creating an instance of the class. All models have `fit` and `compile` properties that are assigned to the instance `settings` property.\r\n\r\nYou can also pass the Tensorflow reference to be used, as a configuration property if you want to use the compiled C++ or GPU via CUDA versions on the `tf` property;\r\n\r\n* `this.settings.compile` is passed to `tensorflow.model.compile` and contains the configuration for optimizers ([`read more`](https://js.tensorflow.org/api/latest/#tf.Model.compile)).\r\n* `this.settings.fit` is passed to `tensorflow.model.fit` and contains the configuration for model fitting ([`read more`](https://js.tensorflow.org/api/latest/#tf.Sequential.fit))\r\n\r\n### Model constructor example\r\n\r\n```javascript\r\nimport { MultipleLinearRegression, } from 'tensorscript';\r\nimport tf from '@tensorflow/tfjs-node-gpu';\r\n\r\nconst MLR = new MultipleLinearRegression({\r\n  fit:{\r\n    epochs:500,\r\n    batchSize:5,\r\n  },\r\n  compile:{\r\n    loss: 'meanSquaredError',\r\n    optimizer: 'adam',\r\n  },\r\n},{\r\n  tf,\r\n});\r\n```\r\n\r\nEach constructor takes two parameters `settings` and `properties`. As in the example above, *settings* are used to configure tensorflow objects and properties are used to configure tensorscript (like which version of tensorflow to use).\r\n\r\n## Training\r\n\r\nAll tensorflow models train asynchronously, therefore all tensorscript model train functions are all asynchronous. Always pass dependent and independent variables as matrix inputs.\r\n\r\nTime series models can be trained with only one input matrix.\r\n\r\n### Training example\r\n\r\n```javascript\r\n\r\nimport { MultipleLinearRegression, } from 'tensorscript';\r\n\r\nasync function main(){\r\n  const MLR = new MultipleLinearRegression();\r\n  const x = [ [1], [2] ];\r\n  const y = [ [3], [4] ];\r\n  await MLR.train(x,y);\r\n}\r\n```\r\n\r\n## Predicting\r\n\r\nAll prediction inputs must be the same shape as training inputs. TensorScript provides an asynchronous predict method that converts tensor values to javascript objects. If you want the tensor from tensorflow, use the calculate method instead.\r\n\r\n### Predicting example\r\n\r\n```javascript\r\nimport { MultipleLinearRegression, } from 'tensorscript';\r\n\r\nasync function main(){\r\n  const MLR = new MultipleLinearRegression();\r\n  const x = [ [1], [2] ];\r\n  const y = [ [3], [4] ];\r\n  await MLR.train(x,y);\r\n\r\n  await MLR.predict([[3]]) //=> [[5]];\r\n  const tensorPrediction = await MLR.calculate([[3]]) //=> [[5]];\r\n  tensorPrediction.data()\r\n    .then(tensors=> /*Typed Array*/)\r\n}\r\n```\r\n\r\n## Examples\r\n\r\nFor more examples on how to do feature scaling and more, check out the *[Examples folder](https://github.com/repetere/tensorscript/tree/master/manual/examples)*.",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manual",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/manual/usage.md",
+    "name": "./manual/usage.md",
+    "content": "# Frequently Asked Questions\r\n\r\n## Scaling\r\n\r\n- **How do I scale and descale my inputs?**\r\n  - The library is only for model create, data engineering and modeling is typically handled elsewhere\r\n  - Check out the regression examples (hint: use [ModelScript](https://repetere.github.io/modelscript/)).\r\n- **How do I cross validate, test/train split, K-fold, etc?**\r\n  - (See above) The library is only for model create, data engineering and modeling is typically handled elsewhere\r\n  - Check out the code examples (hint: use [ModelScript](https://repetere.github.io/modelscript/)).",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manual",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/manual/faq.md",
+    "name": "./manual/faq.md",
+    "content": "# Frequently Asked Questions\r\n\r\n## Scaling\r\n\r\n- **How do I scale and descale my inputs?**\r\n  - The library is only for model create, data engineering and modeling is typically handled elsewhere\r\n  - Check out the regression examples (hint: use [ModelScript](https://repetere.github.io/modelscript/)).\r\n- **How do I cross validate, test/train split, K-fold, etc?**\r\n  - (See above) The library is only for model create, data engineering and modeling is typically handled elsewhere\r\n  - Check out the code examples (hint: use [ModelScript](https://repetere.github.io/modelscript/)).",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "manual",
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/CHANGELOG.md",
+    "name": "./CHANGELOG.md",
+    "content": "# Changelog\n\n## 1.0.0 (2018-07-30)\n\n- **Feat**\n  - First Initial Release\n- **Fix**\n  - N/A\n- **Chore**\n  - Allow for multistep future forecasts in multivariate timeseries.\n  - Add basic clustering example.\n",
+    "static": true,
+    "access": "public"
+  }
+]
