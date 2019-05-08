@@ -13,11 +13,15 @@ describe('testMatchingScript', () => {
   describe('findMatchingRoutePath', () => {
     it('should return matching route from array of routes', () => {
       expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas')).to.equal('/products/:product');
+      expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas#workwithhas')).to.equal('/products/:product');
       expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas?someQueryString=true')).to.equal('/products/:product');
       // expect(findMatchingRoutePath(Object.keys(routes), 'https://www.example.com/products/afdsf')).to.equal('/products/:product');
       
     });
     it('should return matching route from object of routes', () => {
+      const notARealLink = findMatchingRoutePath(routes, '/not/a/real/link');
+      
+      expect(notARealLink).to.be.undefined;
       expect(findMatchingRoutePath(routes, '/collections/asfdas/products/afasf')).to.equal('/collections/:collection/products/:product');
       expect(findMatchingRoutePath(routes, '/collections/ha8vsfjsaf/products/asdfa')).to.equal('/collections/:collection/products/:product');
     });
