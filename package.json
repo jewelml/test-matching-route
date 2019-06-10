@@ -1,6 +1,6 @@
 {
   "name": "test-matching-route",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple express-like socket routing for websockets, event emitters and socket.io ",
   "main": "index.mjs",
   "module": "index.mjs",

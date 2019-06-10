@@ -43,7 +43,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/match.mjs</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import PathRegExp from &apos;path-to-regexp&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PathRegExp from &apos;path-to-regexp&apos;;
 // const ROUTE_MAP = new Map();
 export const ROUTE_MAP = new Map();
 
@@ -78,15 +78,35 @@ export function getParameterizedPath(route, options = { useMap: true, }) {
  * @return {string}          A matching dynamic route
  */
 export function findMatchingRoutePath(routes, location, options = {}) {
-  var matching;
+  const { return_matching_keys, } = options;
+  let matching;
+  let params;
+  let re;
   location = (/\?[^\s]+$/.test(location)) ? location.replace(/^([^\s\?]+)\?[^\s]+$/, &apos;$1&apos;) : location;
   const routeArray = Array.isArray(routes) ? routes : Object.keys(routes);
   routeArray.forEach(function(key){
     var result = getParameterizedPath(key, options);
-    if (result.re.test(location) &amp;&amp; !matching) matching = key;
+    if (result.re.test(location) &amp;&amp; !matching) {
+      matching = key;
+      re = result.re;
+      if (return_matching_keys) {
+        const matchingParams = result.re.exec(matching);
+        const matchingVals = location.match(result.re);
+        params = matchingVals.reduce((result, val, idx) =&gt; { 
+          if (idx !== 0 &amp;&amp; typeof val === &apos;string&apos;) result[ matchingParams[ idx ].replace(&apos;:&apos;,&apos;&apos;) ] = val;
+          return result;          
+        }, {});
+      }
+    }
   });
   // console.log({ routes, location, matching, });
-  return matching;
+  return return_matching_keys &amp;&amp; matching ? {
+    route: matching,
+    location,
+    params,
+    re,
+  }
+    : matching;
 }
 </code></pre>
 
