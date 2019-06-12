@@ -10,6 +10,9 @@ const routes = {
   '/:product/:id.html': { page: 'htmlpage', },
 };
 
+// const m = findMatchingRoutePath(Object.keys(routes), '/products/asfdas', { return_matching_keys: true, });
+// console.log({m})
+
 describe('testMatchingScript', () => {
   describe('findMatchingRoutePath', () => {
     it('should return matching route from array of routes', () => {
