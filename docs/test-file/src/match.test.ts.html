@@ -1,0 +1,123 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/match.test.ts | Event Logger Shopify</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-112697260-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-112697260-2');
+  </script><meta name="description" content="Logging Shopify Click Events"><meta property="og:type" content="website"><meta property="og:url" content="https://jewelml.github.io/event_logger_shopify"><meta property="og:site_name" content="Event Logger Shopify"><meta property="og:title" content="Event Logger Shopify"><meta property="og:image" content="https://jewelml.com/favicon.png"><meta property="og:description" content="Logging Shopify Click Events"><meta property="og:author" content="https://github.com/jewelml"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Event Logger Shopify"><meta property="twitter:description" content="Logging Shopify Click Events"><meta property="twitter:image" content="https://jewelml.com/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/jewelml/event_logger_shopify"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/match.test.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { expect, } from &apos;chai&apos;;
+import { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from &apos;./index&apos;;
+
+const routes = {
+  &apos;/collections/:collection/products/:product&apos;: { page: &apos;data1&apos;, },
+  &apos;/products/:product&apos;: { page: &apos;data2&apos;, },
+  &apos;/somedata/:collection/products/:id&apos;: { page: &apos;data3&apos;, },
+  &apos;/:product&apos;: { page: &apos;data4&apos;, },
+  &apos;/:id&apos;: { page: &apos;data5&apos;, },
+  &apos;/:product/:id.html&apos;: { page: &apos;htmlpage&apos;, },
+};
+
+// const m = findMatchingRoutePath(Object.keys(routes), &apos;/products/asfdas&apos;, { return_matching_keys: true, });
+// console.log({m})
+
+describe(&apos;testMatchingScript&apos;, () =&gt; {
+  describe(&apos;findMatchingRoutePath&apos;, () =&gt; {
+    it(&apos;should return matching route from array of routes&apos;, () =&gt; {
+      expect(findMatchingRoutePath(Object.keys(routes), &apos;/products/asfdas&apos;)).to.equal(&apos;/products/:product&apos;);
+      expect(findMatchingRoutePath(Object.keys(routes), &apos;/products/asfdas#workwithhas&apos;)).to.equal(&apos;/products/:product&apos;);
+      expect(findMatchingRoutePath(Object.keys(routes), &apos;/products/asfdas?someQueryString=true&apos;)).to.equal(&apos;/products/:product&apos;);
+      // expect(findMatchingRoutePath(Object.keys(routes), &apos;https://www.example.com/products/afdsf&apos;)).to.equal(&apos;/products/:product&apos;);
+    });
+    it(&apos;should return matching route from object of routes&apos;, () =&gt; {
+      const notARealLink = findMatchingRoutePath(routes, &apos;/not/a/real/link&apos;);
+      
+      expect(notARealLink).to.be.undefined;
+      expect(findMatchingRoutePath(routes, &apos;/collections/asfdas/products/afasf&apos;)).to.equal(&apos;/collections/:collection/products/:product&apos;);
+      expect(findMatchingRoutePath(routes, &apos;/collections/ha8vsfjsaf/products/asdfa&apos;)).to.equal(&apos;/collections/:collection/products/:product&apos;);
+    });
+    it(&apos;should return matching params&apos;, () =&gt; { 
+      const singlePage = &apos;/richmond-dress/195311.html&apos;;
+      const singleURL = &apos;https://www.trinaturk.com/richmond-dress/195311.html&apos;;
+      const singlePageMatch = findMatchingRoutePath(routes, singlePage, { return_matching_keys: true, });
+      const singleURLMatch = findMatchingRoutePath(routes, singleURL, { return_matching_keys: true, });
+
+      expect(singleURLMatch).to.be.undefined;
+      expect(singlePageMatch).to.be.an(&apos;object&apos;);
+      expect(singlePageMatch).to.have.keys([ &apos;route&apos;, &apos;location&apos;, &apos;params&apos;, &apos;re&apos;, ]);
+      expect(singlePageMatch.re).to.be.an(&apos;RegExp&apos;);
+      expect(singlePageMatch.params.product).to.eq(&apos;richmond-dress&apos;);
+      expect(singlePageMatch.params.id).to.eq( &apos;195311&apos;);
+
+      // console.log({ singlePage, singlePageMatch, singleURL, singleURLMatch, });
+    });
+  });
+  describe(&apos;getParameterizedPath&apos;, () =&gt; {
+    it(&apos;should return parameterized path&apos;, () =&gt; { 
+      const proute = getParameterizedPath(&apos;/products/:product&apos;);
+      expect(proute.keys).to.be.an(&apos;array&apos;);
+      expect(proute.keys).to.have.lengthOf(1);
+      expect(proute.re).to.be.instanceOf(RegExp);
+    });
+  });
+  describe(&apos;ROUTE_MAP&apos;, () =&gt; {
+    it(&apos;should store cached lookups in map&apos;, () =&gt; {
+      expect(ROUTE_MAP.size).to.eql(Object.keys(routes).length);
+    });
+    it(&apos;should return matching route from object of routes without route cache&apos;, () =&gt; {
+      const noCache = getParameterizedPath(&apos;/products/:product&apos;, { useMap: false, });
+      expect(noCache).to.be.an(&apos;object&apos;);
+    });
+  });
+});</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+
+
+</body></html>

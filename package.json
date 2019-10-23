@@ -1,19 +1,21 @@
 {
   "name": "test-matching-route",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Simple express-like socket routing for websockets, event emitters and socket.io ",
-  "main": "index.mjs",
-  "module": "index.mjs",
+  "main": "bundle/tmr.cjs.js",
+  "module": "bundle/tmr.esm.js",
   "browser": "bundle/tmr.umd.js",
   "web": "bundle/tmr.iife.js",
   "node": "bundle/tmr.cjs.js",
   "es": "bundle/tmr.esm.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "testlegacy": "nyc mocha  -r @std/esm \"test/**/*.{js,mjs}\"",
     "test": "jest --coverage",
     "doc": "esdoc",
-    "build": "rollup -c && esdoc",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "compile":"tsc",
+    "build": "tsc && rollup -c && esdoc",
+    "coverage": "nyc report  --temp-directory=coverage --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -75,6 +77,7 @@
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
     "ts-jest": "^24.1.0",
+    "tslib": "^1.10.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {

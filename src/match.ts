@@ -1,5 +1,5 @@
 import PathRegExp from 'path-to-regexp';
-import types from '../types';
+import * as types from './types';
 // const ROUTE_MAP = new Map();
 export const ROUTE_MAP = new Map();
 

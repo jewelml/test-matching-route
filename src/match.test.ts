@@ -1,5 +1,5 @@
 import { expect, } from 'chai';
-import { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from '../index';
+import { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from './index';
 
 const routes = {
   '/collections/:collection/products/:product': { page: 'data1', },

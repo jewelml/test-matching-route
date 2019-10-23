@@ -1,116 +1,7 @@
 [
   {
-    "__docId__": 0,
-    "kind": "file",
-    "name": "lib/match.mjs",
-    "content": "import PathRegExp from 'path-to-regexp';\r\n// const ROUTE_MAP = new Map();\r\nexport const ROUTE_MAP = new Map();\r\n\r\n/**\r\n * Generates a express style regexp for a given route and stores in a Map\r\n * @param  {string} route The route that should be converted into a regexp\r\n * @return {Object}       Returns an object with param keys and a path regexp\r\n */\r\nexport function getParameterizedPath(route, options = { useMap: true, }) {\r\n  if (ROUTE_MAP.has(route) && options.useMap) {\r\n    return ROUTE_MAP.get(route);\r\n  } else {\r\n    var keys = [];\r\n    var result = new PathRegExp(route, keys);\r\n    // console.log({ route, }, {\r\n    //   re: result,\r\n    //   keys,\r\n    // });\r\n    ROUTE_MAP.set(route, {\r\n      re: result,\r\n      keys: keys,\r\n    });\r\n    return { keys:keys, re: result, };\r\n  }\r\n}\r\n\r\n\r\n/**\r\n * Finds a matching dynamic route from manifest\r\n * @param  {Object|Array} routes   The manifest configuration object\r\n * @param  {string} location The window location that should be resolved\r\n * @return {string}          A matching dynamic route\r\n */\r\nexport function findMatchingRoutePath(routes, location, options = {}) {\r\n  const { return_matching_keys, } = options;\r\n  let matching;\r\n  let params;\r\n  let re;\r\n  location = (/\\?[^\\s]+$/.test(location)) ? location.replace(/^([^\\s\\?]+)\\?[^\\s]+$/, '$1') : location;\r\n  const routeArray = Array.isArray(routes) ? routes : Object.keys(routes);\r\n  routeArray.forEach(function(key){\r\n    var result = getParameterizedPath(key, options);\r\n    if (result.re.test(location) && !matching) {\r\n      matching = key;\r\n      re = result.re;\r\n      if (return_matching_keys) {\r\n        const matchingParams = result.re.exec(matching);\r\n        const matchingVals = location.match(result.re);\r\n        params = matchingVals.reduce((result, val, idx) => { \r\n          if (idx !== 0 && typeof val === 'string') result[ matchingParams[ idx ].replace(':','') ] = val;\r\n          return result;          \r\n        }, {});\r\n      }\r\n    }\r\n  });\r\n  // console.log({ routes, location, matching, });\r\n  return return_matching_keys && matching ? {\r\n    route: matching,\r\n    location,\r\n    params,\r\n    re,\r\n  }\r\n    : matching;\r\n}\r\n",
-    "static": true,
-    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/lib/match.mjs",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 1,
-    "kind": "variable",
-    "name": "ROUTE_MAP",
-    "memberof": "lib/match.mjs",
-    "static": true,
-    "longname": "lib/match.mjs~ROUTE_MAP",
-    "access": "public",
-    "export": true,
-    "importPath": "test-matching-route/lib/match.mjs",
-    "importStyle": "{ROUTE_MAP}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true
-  },
-  {
-    "__docId__": 2,
-    "kind": "function",
-    "name": "getParameterizedPath",
-    "memberof": "lib/match.mjs",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "lib/match.mjs~getParameterizedPath",
-    "access": "public",
-    "export": true,
-    "importPath": "test-matching-route/lib/match.mjs",
-    "importStyle": "{getParameterizedPath}",
-    "description": "Generates a express style regexp for a given route and stores in a Map",
-    "lineNumber": 10,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "route",
-        "description": "The route that should be converted into a regexp"
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "Object"
-      ],
-      "spread": false,
-      "description": "Returns an object with param keys and a path regexp"
-    }
-  },
-  {
-    "__docId__": 3,
-    "kind": "function",
-    "name": "findMatchingRoutePath",
-    "memberof": "lib/match.mjs",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "lib/match.mjs~findMatchingRoutePath",
-    "access": "public",
-    "export": true,
-    "importPath": "test-matching-route/lib/match.mjs",
-    "importStyle": "{findMatchingRoutePath}",
-    "description": "Finds a matching dynamic route from manifest",
-    "lineNumber": 35,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "Object",
-          "Array"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "routes",
-        "description": "The manifest configuration object"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "location",
-        "description": "The window location that should be resolved"
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "string"
-      ],
-      "spread": false,
-      "description": "A matching dynamic route"
-    }
-  },
-  {
     "kind": "index",
-    "content": "# test-matching-route\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
+    "content": "\n# test-matching-route [![Coverage Status](https://coveralls.io/repos/github/jewelml/test-matching-route/badge.svg?branch=master)](https://coveralls.io/github/jewelml/test-matching-route?branch=master) [![Build Status](https://travis-ci.org/jewelml/test-matching-route.svg?branch=master)](https://travis-ci.org/jewelml/test-matching-route)\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
     "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/README.md",
     "name": "./README.md",
     "static": true,
@@ -118,7 +9,7 @@
   },
   {
     "kind": "manualIndex",
-    "content": "# test-matching-route\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
+    "content": "\n# test-matching-route [![Coverage Status](https://coveralls.io/repos/github/jewelml/test-matching-route/badge.svg?branch=master)](https://coveralls.io/github/jewelml/test-matching-route?branch=master) [![Build Status](https://travis-ci.org/jewelml/test-matching-route.svg?branch=master)](https://travis-ci.org/jewelml/test-matching-route)\nTest a location against a list of possible routes. This is a simple way to test routes.\n\n## Example\n\nThis works for both socket servers and clients\n```javascript\n// SERVER CODE\nimport { findMatchingRoutePath, } from 'test-matching-route';\n\nconst routesObject = {\n  '/collections/:collection/products/:product': { page:'data1', },\n  '/products/:product': { page:'data2',  },\n  '/somedata/:collection/products/:id': { page:'data3', },\n  '/:product': { page:'data4',  },\n  '/:id': { page:'data5', },\n};\nconst routesArray = ['/collections/:collection/products/:product',  '/products/:product',  '/somedata/:collection/products/:id',  '/:product',  '/:id',];\n\nfindMatchingRoutePath(routesObject, '/products/cool-shoes'); // => '/products/:product'\nfindMatchingRoutePath(routesArray, '/collections/luxury/products/fancy-watch'); // => '/collections/:collection/products/:product'\n```\n",
     "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/README.md",
     "name": "./README.md",
     "static": true,
@@ -162,5 +53,146 @@
     "content": "# Changelog\n\n## 1.0.0 (2018-07-30)\n\n- **Feat**\n  - First Initial Release\n- **Fix**\n  - N/A\n- **Chore**\n  - Allow for multistep future forecasts in multivariate timeseries.\n  - Add basic clustering example.\n",
     "static": true,
     "access": "public"
+  },
+  {
+    "__docId__": 0,
+    "kind": "testFile",
+    "name": "src/match.test.ts",
+    "content": "import { expect, } from 'chai';\r\nimport { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from './index';\r\n\r\nconst routes = {\r\n  '/collections/:collection/products/:product': { page: 'data1', },\r\n  '/products/:product': { page: 'data2', },\r\n  '/somedata/:collection/products/:id': { page: 'data3', },\r\n  '/:product': { page: 'data4', },\r\n  '/:id': { page: 'data5', },\r\n  '/:product/:id.html': { page: 'htmlpage', },\r\n};\r\n\r\n// const m = findMatchingRoutePath(Object.keys(routes), '/products/asfdas', { return_matching_keys: true, });\r\n// console.log({m})\r\n\r\ndescribe('testMatchingScript', () => {\r\n  describe('findMatchingRoutePath', () => {\r\n    it('should return matching route from array of routes', () => {\r\n      expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas')).to.equal('/products/:product');\r\n      expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas#workwithhas')).to.equal('/products/:product');\r\n      expect(findMatchingRoutePath(Object.keys(routes), '/products/asfdas?someQueryString=true')).to.equal('/products/:product');\r\n      // expect(findMatchingRoutePath(Object.keys(routes), 'https://www.example.com/products/afdsf')).to.equal('/products/:product');\r\n    });\r\n    it('should return matching route from object of routes', () => {\r\n      const notARealLink = findMatchingRoutePath(routes, '/not/a/real/link');\r\n      \r\n      expect(notARealLink).to.be.undefined;\r\n      expect(findMatchingRoutePath(routes, '/collections/asfdas/products/afasf')).to.equal('/collections/:collection/products/:product');\r\n      expect(findMatchingRoutePath(routes, '/collections/ha8vsfjsaf/products/asdfa')).to.equal('/collections/:collection/products/:product');\r\n    });\r\n    it('should return matching params', () => { \r\n      const singlePage = '/richmond-dress/195311.html';\r\n      const singleURL = 'https://www.trinaturk.com/richmond-dress/195311.html';\r\n      const singlePageMatch = findMatchingRoutePath(routes, singlePage, { return_matching_keys: true, });\r\n      const singleURLMatch = findMatchingRoutePath(routes, singleURL, { return_matching_keys: true, });\r\n\r\n      expect(singleURLMatch).to.be.undefined;\r\n      expect(singlePageMatch).to.be.an('object');\r\n      expect(singlePageMatch).to.have.keys([ 'route', 'location', 'params', 're', ]);\r\n      expect(singlePageMatch.re).to.be.an('RegExp');\r\n      expect(singlePageMatch.params.product).to.eq('richmond-dress');\r\n      expect(singlePageMatch.params.id).to.eq( '195311');\r\n\r\n      // console.log({ singlePage, singlePageMatch, singleURL, singleURLMatch, });\r\n    });\r\n  });\r\n  describe('getParameterizedPath', () => {\r\n    it('should return parameterized path', () => { \r\n      const proute = getParameterizedPath('/products/:product');\r\n      expect(proute.keys).to.be.an('array');\r\n      expect(proute.keys).to.have.lengthOf(1);\r\n      expect(proute.re).to.be.instanceOf(RegExp);\r\n    });\r\n  });\r\n  describe('ROUTE_MAP', () => {\r\n    it('should store cached lookups in map', () => {\r\n      expect(ROUTE_MAP.size).to.eql(Object.keys(routes).length);\r\n    });\r\n    it('should return matching route from object of routes without route cache', () => {\r\n      const noCache = getParameterizedPath('/products/:product', { useMap: false, });\r\n      expect(noCache).to.be.an('object');\r\n    });\r\n  });\r\n});",
+    "static": true,
+    "longname": "/Users/yawjosephetse/Developer/github/jewelml/test-matching-route/src/match.test.ts",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "test",
+    "name": "describe0",
+    "testId": 0,
+    "memberof": "src/match.test.ts",
+    "testDepth": 0,
+    "static": true,
+    "longname": "src/match.test.ts~describe0",
+    "access": null,
+    "description": "testMatchingScript",
+    "lineNumber": 16
+  },
+  {
+    "__docId__": 2,
+    "kind": "test",
+    "name": "describe1",
+    "testId": 1,
+    "memberof": "src/match.test.ts~describe0",
+    "testDepth": 1,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe1",
+    "access": null,
+    "description": "findMatchingRoutePath",
+    "lineNumber": 17
+  },
+  {
+    "__docId__": 3,
+    "kind": "test",
+    "name": "it2",
+    "testId": 2,
+    "memberof": "src/match.test.ts~describe0.describe1",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe1.it2",
+    "access": null,
+    "description": "should return matching route from array of routes",
+    "lineNumber": 18
+  },
+  {
+    "__docId__": 4,
+    "kind": "test",
+    "name": "it3",
+    "testId": 3,
+    "memberof": "src/match.test.ts~describe0.describe1",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe1.it3",
+    "access": null,
+    "description": "should return matching route from object of routes",
+    "lineNumber": 24
+  },
+  {
+    "__docId__": 5,
+    "kind": "test",
+    "name": "it4",
+    "testId": 4,
+    "memberof": "src/match.test.ts~describe0.describe1",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe1.it4",
+    "access": null,
+    "description": "should return matching params",
+    "lineNumber": 31
+  },
+  {
+    "__docId__": 6,
+    "kind": "test",
+    "name": "describe5",
+    "testId": 5,
+    "memberof": "src/match.test.ts~describe0",
+    "testDepth": 1,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe5",
+    "access": null,
+    "description": "getParameterizedPath",
+    "lineNumber": 47
+  },
+  {
+    "__docId__": 7,
+    "kind": "test",
+    "name": "it6",
+    "testId": 6,
+    "memberof": "src/match.test.ts~describe0.describe5",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe5.it6",
+    "access": null,
+    "description": "should return parameterized path",
+    "lineNumber": 48
+  },
+  {
+    "__docId__": 8,
+    "kind": "test",
+    "name": "describe7",
+    "testId": 7,
+    "memberof": "src/match.test.ts~describe0",
+    "testDepth": 1,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe7",
+    "access": null,
+    "description": "ROUTE_MAP",
+    "lineNumber": 55
+  },
+  {
+    "__docId__": 9,
+    "kind": "test",
+    "name": "it8",
+    "testId": 8,
+    "memberof": "src/match.test.ts~describe0.describe7",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe7.it8",
+    "access": null,
+    "description": "should store cached lookups in map",
+    "lineNumber": 56
+  },
+  {
+    "__docId__": 10,
+    "kind": "test",
+    "name": "it9",
+    "testId": 9,
+    "memberof": "src/match.test.ts~describe0.describe7",
+    "testDepth": 2,
+    "static": true,
+    "longname": "src/match.test.ts~describe0.describe7.it9",
+    "access": null,
+    "description": "should return matching route from object of routes without route cache",
+    "lineNumber": 59
   }
 ]

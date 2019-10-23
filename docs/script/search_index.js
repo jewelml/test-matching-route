@@ -1,26 +1,68 @@
 window.esdocSearchIndex = [
   [
-    "test-matching-route/lib/match.mjs~route_map",
-    "variable/index.html#static-variable-ROUTE_MAP",
-    "<span>ROUTE_MAP</span> <span class=\"search-result-import-path\">test-matching-route/lib/match.mjs</span>",
-    "variable"
+    "src/match.test.ts",
+    "test-file/src/match.test.ts.html",
+    "src/match.test.ts",
+    "testFile"
   ],
   [
-    "test-matching-route/lib/match.mjs~findmatchingroutepath",
-    "function/index.html#static-function-findMatchingRoutePath",
-    "<span>findMatchingRoutePath</span> <span class=\"search-result-import-path\">test-matching-route/lib/match.mjs</span>",
-    "function"
+    "",
+    "test-file/src/match.test.ts.html#lineNumber16",
+    "testMatchingScript",
+    "test"
   ],
   [
-    "test-matching-route/lib/match.mjs~getparameterizedpath",
-    "function/index.html#static-function-getParameterizedPath",
-    "<span>getParameterizedPath</span> <span class=\"search-result-import-path\">test-matching-route/lib/match.mjs</span>",
-    "function"
+    "",
+    "test-file/src/match.test.ts.html#lineNumber55",
+    "testMatchingScript ROUTE_MAP",
+    "test"
   ],
   [
-    "lib/match.mjs",
-    "file/lib/match.mjs.html",
-    "lib/match.mjs",
-    "file"
+    "",
+    "test-file/src/match.test.ts.html#lineNumber59",
+    "testMatchingScript ROUTE_MAP should return matching route from object of routes without route cache",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber56",
+    "testMatchingScript ROUTE_MAP should store cached lookups in map",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber17",
+    "testMatchingScript findMatchingRoutePath",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber31",
+    "testMatchingScript findMatchingRoutePath should return matching params",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber18",
+    "testMatchingScript findMatchingRoutePath should return matching route from array of routes",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber24",
+    "testMatchingScript findMatchingRoutePath should return matching route from object of routes",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber47",
+    "testMatchingScript getParameterizedPath",
+    "test"
+  ],
+  [
+    "",
+    "test-file/src/match.test.ts.html#lineNumber48",
+    "testMatchingScript getParameterizedPath should return parameterized path",
+    "test"
   ]
 ]

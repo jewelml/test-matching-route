@@ -1,6 +1,5 @@
 
-# test-matching-route
-[![Coverage Status](https://coveralls.io/repos/github/jewelml/test-matching-route/badge.svg?branch=master)](https://coveralls.io/github/jewelml/test-matching-route?branch=master)
+# test-matching-route [![Coverage Status](https://coveralls.io/repos/github/jewelml/test-matching-route/badge.svg?branch=master)](https://coveralls.io/github/jewelml/test-matching-route?branch=master) [![Build Status](https://travis-ci.org/jewelml/test-matching-route.svg?branch=master)](https://travis-ci.org/jewelml/test-matching-route)
 Test a location against a list of possible routes. This is a simple way to test routes.
 
 ## Example

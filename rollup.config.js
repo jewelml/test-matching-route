@@ -10,7 +10,7 @@ import typescript from 'rollup-plugin-typescript';
 export default [
   // browser-friendly UMD build
   {
-    input: 'index.ts',
+    input: 'dist/index.js',
     output: {
       exports: 'named',
       file: pkg.browser,
@@ -41,7 +41,7 @@ export default [
   },
   // browser-friendly IIFE
   {
-    input: 'index.ts',
+    input: 'dist/index.js',
     output: {
       exports: 'named',
       file: pkg.web,
@@ -79,7 +79,7 @@ export default [
   // an array for the `output` option, where we can specify 
   // `file` and `format` for each target)
   {
-    input: 'index.ts',
+    input: 'dist/index.js',
     external: [
       // '@tensorflow/tfjs',
       // 'lodash.range',
@@ -99,5 +99,8 @@ export default [
         format: 'es',
       },
     ],
+    // plugins: [
+    //   typescript()
+    // ]
   },
 ];
