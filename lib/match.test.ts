@@ -58,7 +58,7 @@ describe('testMatchingScript', () => {
     });
     it('should return matching route from object of routes without route cache', () => {
       const noCache = getParameterizedPath('/products/:product', { useMap: false, });
-      // console.log({ noCache });
+      console.log({ noCache });
       expect(noCache).to.be.an('object');
     });
   });
