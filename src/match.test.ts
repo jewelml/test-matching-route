@@ -1,5 +1,5 @@
 import { expect, } from 'chai';
-import { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from '../index';
+import { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP, } from './index';
 
 const routes = {
   '/collections/:collection/products/:product': { page: 'data1', },
@@ -58,7 +58,6 @@ describe('testMatchingScript', () => {
     });
     it('should return matching route from object of routes without route cache', () => {
       const noCache = getParameterizedPath('/products/:product', { useMap: false, });
-      // console.log({ noCache });
       expect(noCache).to.be.an('object');
     });
   });

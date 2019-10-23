@@ -1,14 +1,6 @@
 {
-  "coverage": "66.66%",
-  "expectCount": 3,
-  "actualCount": 2,
-  "files": {
-    "lib/match.mjs": {
-      "expectCount": 3,
-      "actualCount": 2,
-      "undocumentLines": [
-        3
-      ]
-    }
-  }
+  "coverage": "0%",
+  "expectCount": 0,
+  "actualCount": 0,
+  "files": {}
 }

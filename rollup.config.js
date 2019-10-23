@@ -4,12 +4,13 @@ import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import pkg from './package.json';
 import { terser, } from 'rollup-plugin-terser';
+import typescript from 'rollup-plugin-typescript';
 
 
 export default [
   // browser-friendly UMD build
   {
-    input: 'index.mjs',
+    input: 'dist/index.js',
     output: {
       exports: 'named',
       file: pkg.browser,
@@ -17,6 +18,7 @@ export default [
       format: 'umd',
     },
     plugins: [
+      typescript(),
       resolve({
         preferBuiltins: true,
       }), // so Rollup can find `ms`
@@ -39,7 +41,7 @@ export default [
   },
   // browser-friendly IIFE
   {
-    input: 'index.mjs',
+    input: 'dist/index.js',
     output: {
       exports: 'named',
       file: pkg.web,
@@ -47,6 +49,7 @@ export default [
       format: 'iife',
     },
     plugins: [
+      typescript(),
       resolve({
         preferBuiltins: true,
       }), // so Rollup can find `ms`
@@ -76,7 +79,7 @@ export default [
   // an array for the `output` option, where we can specify 
   // `file` and `format` for each target)
   {
-    input: 'index.mjs',
+    input: 'dist/index.js',
     external: [
       // '@tensorflow/tfjs',
       // 'lodash.range',
@@ -96,5 +99,8 @@ export default [
         format: 'es',
       },
     ],
+    // plugins: [
+    //   typescript()
+    // ]
   },
 ];

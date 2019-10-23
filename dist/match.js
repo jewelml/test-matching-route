@@ -1,13 +1,12 @@
 import PathRegExp from 'path-to-regexp';
-
 // const ROUTE_MAP = new Map();
-const ROUTE_MAP = new Map();
+export const ROUTE_MAP = new Map();
 /**
  * Generates a express style regexp for a given route and stores in a Map
  * @param  {string} route The route that should be converted into a regexp
  * @return {Object}       Returns an object with param keys and a path regexp
  */
-function getParameterizedPath(route, options = { useMap: true, }) {
+export function getParameterizedPath(route, options = { useMap: true, }) {
     if (ROUTE_MAP.has(route) && options.useMap) {
         return ROUTE_MAP.get(route);
     }
@@ -32,7 +31,7 @@ function getParameterizedPath(route, options = { useMap: true, }) {
  * @param  {string} location The window location that should be resolved
  * @return {string}          A matching dynamic route
  */
-function findMatchingRoutePath(routes, location, options = {}) {
+export function findMatchingRoutePath(routes, location, options = {}) {
     const { return_matching_keys, } = options;
     let matching;
     let params;
@@ -66,5 +65,3 @@ function findMatchingRoutePath(routes, location, options = {}) {
     }
         : matching;
 }
-
-export { findMatchingRoutePath, getParameterizedPath, ROUTE_MAP };
